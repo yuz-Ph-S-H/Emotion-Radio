@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共感电台 · Emotion Radio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+</head>
+<body>
+    <!-- 全屏视觉画布 -->
+    <canvas id="visual-canvas"></canvas>
+    <!-- 画面之上的柔光蒙版，统一氛围 -->
+    <div id="scene-overlay"></div>
+
+    <!-- 顶部品牌条 -->
+    <header id="brand-bar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <span class="brand-name">共感电台</span>
+            <span class="brand-sub">EMOTION&nbsp;RADIO</span>
+        </div>
+        <div id="now-status" class="now-status">待机中</div>
+    </header>
+
+    <!-- 标题（首次显示，输入后淡出）-->
+    <div id="title-area">
+        <h1>共感电台</h1>
+        <p>输入一段文字，听见、看见你的情绪</p>
+    </div>
+
+    <!-- 情绪面板（玻璃拟态卡片）-->
+    <aside id="emotion-indicator" class="glass-card">
+        <div class="panel-title">情绪解析</div>
+        <div class="indicator-item">
+            <span class="label">情感</span>
+            <div class="bar-container">
+                <div id="valence-bar" class="bar valence"></div>
+            </div>
+            <span id="valence-text" class="value">–</span>
+        </div>
+        <div class="indicator-item">
+            <span class="label">能量</span>
+            <div class="bar-container">
+                <div id="arousal-bar" class="bar arousal"></div>
+            </div>
+            <span id="arousal-text" class="value">–</span>
+        </div>
+        <!-- 意象标签 -->
+        <div id="imagery-tags"></div>
+    </aside>
+
+    <!-- 文字显示区 -->
+    <div id="text-display"></div>
+
+    <!-- 输入区 -->
+    <div id="input-area">
+        <div class="input-shell">
+            <input type="text" id="text-input"
+                   placeholder="输入任意文字，按回车发送…"
+                   autocomplete="off" />
+            <button id="send-btn"><span>发送</span></button>
+        </div>
+    </div>
+
+    <!-- 时间线 -->
+    <div id="timeline-bar" class="glass-card">
+        <button id="playback-btn">▶ 回放</button>
+        <div id="timeline-track"><div id="timeline-progress"></div></div>
+        <span id="entry-count">0 条</span>
+    </div>
+
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/socket.js"></script>
+    <script src="/static/js/particle.js"></script>
+    <script src="/static/js/effects.js"></script>
+    <script src="/static/js/visual-engine.js"></script>
+    <script src="/static/js/music-engine.js"></script>
+    <script src="/static/js/timeline.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

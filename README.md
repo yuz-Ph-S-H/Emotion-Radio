@@ -80,7 +80,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-启动后浏览器打开 **http://127.0.0.1:5000**。
+启动后浏览器打开 http://127.0.0.1:5000。
 
 > **Windows 用户**：可直接双击 `run.bat`（或运行 `./run.ps1`），脚本会自动用 UTF-8 启动并打开浏览器。
 

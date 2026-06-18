@@ -301,7 +301,7 @@
 
     async function loadExternalPlaylist() {
         try {
-            const res = await fetch('/static/audio/playlist.json', { cache: 'no-store' });
+            const res = await fetch('static/audio/playlist.json', { cache: 'no-store' });
             if (!res.ok) return;
             const data = await res.json();
             if (!data.enabled || !Array.isArray(data.tracks)) return;

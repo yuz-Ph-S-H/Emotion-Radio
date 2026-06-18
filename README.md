@@ -38,10 +38,11 @@ art_final/
 │   ├── api_analyzer.py        #   大语言模型 API 分析器（可选）
 │   ├── emotion_model.py       #   情绪→音乐/视觉参数模型 + 情绪性格档
 │   └── imagery_dict.py        #   意象词典(260+) 与情绪关键词(197)
-├── templates/index.html       # 页面结构
+├── index.html                 # 页面入口（GitHub Pages 与本地共用同一份）
 ├── static/
 │   ├── css/style.css          #   玻璃拟态视觉样式
 │   ├── js/                    #   前端运行时
+│   │   ├── analyzer.js        #     纯前端情绪分析（由 nlp/ 移植，静态部署用）
 │   │   ├── music-engine.js    #     Tone.js 乐句引擎 + 母带链
 │   │   ├── visual-engine.js   #     Canvas 渲染调度
 │   │   ├── particle.js        #     粒子类与效果预设
@@ -55,34 +56,40 @@ art_final/
 
 ---
 
-## 🚀 快速开始
+## 🌐 在线访问（GitHub Pages）
 
-### 环境要求
-- Python 3.10+（开发使用 3.13）
-- 现代浏览器（Chrome / Edge / Firefox）
+本项目已做**纯前端化**：情绪分析（意象词典 + 规则映射）已由 Python 后端完整移植到浏览器端
+`static/js/analyzer.js`，无需 Flask / Socket.IO 即可独立运行。因此整站可直接托管到 GitHub Pages。
 
-### 安装与运行
+👉 在线体验：**https://yuz-ph-s-h.github.io/Emotion-Radio/**
+
+### 首次启用 Pages（仓库所有者操作一次）
+1. 打开仓库 **Settings → Pages**。
+2. **Build and deployment → Source** 选择 **Deploy from a branch**。
+3. **Branch** 选择 `main`，文件夹选择 **`/ (root)`**，点击 **Save**。
+4. 等待 1～2 分钟，刷新该页面顶部即出现绿色的站点链接，访问上面的地址即可。
+
+之后每次 `git push` 到 `main`，GitHub 会自动重新发布，无需再手动操作。
+
+---
+
+## 🚀 本地运行（可选）
+
+无需后端也能跑——任选一种方式在浏览器打开 `index.html`：
 
 ```bash
-# 1. 克隆
-git clone https://github.com/<your-name>/emotion-radio.git
-cd emotion-radio
+# 方式一：任意静态服务器（推荐，避免 file:// 下音频/资源跨域限制）
+python -m http.server 8000
+# 然后打开 http://127.0.0.1:8000
 
-# 2. 创建虚拟环境并安装依赖
+# 方式二：仍用 Flask（会自动加载根目录同一份 index.html）
 python -m venv venv
-# Windows:
-venv\Scripts\activate
-# macOS / Linux:
-# source venv/bin/activate
+venv\Scripts\activate            # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
-
-# 3. 启动
-python app.py
+python app.py                    # 打开 http://127.0.0.1:5000
 ```
 
-启动后浏览器打开 http://127.0.0.1:5000。
-
-> **Windows 用户**：可直接双击 `run.bat`（或运行 `./run.ps1`），脚本会自动用 UTF-8 启动并打开浏览器。
+> **Windows 用户**：可直接双击 `run.bat`（或运行 `./run.ps1`）。
 
 ### 使用
 1. 进入页面后**先点击一下页面任意位置**（浏览器策略要求用户交互后才能播放音频）。

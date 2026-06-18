@@ -1,6 +1,9 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, send_from_directory
 from flask_socketio import SocketIO, emit
 from config import NLP_MODE, HOST, PORT
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 根据配置加载不同的分析器
 if NLP_MODE == "api":
@@ -19,7 +22,8 @@ analyzer = Analyzer()
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    # 直接返回仓库根目录的静态首页（与 GitHub Pages 部署的入口完全一致）
+    return send_from_directory(BASE_DIR, "index.html")
 
 
 @socketio.on("analyze_text")

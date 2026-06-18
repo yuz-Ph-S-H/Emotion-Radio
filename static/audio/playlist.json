@@ -5,17 +5,17 @@
     {
       "id": "calm_piano",
       "title": "Calm Piano Bed",
-      "src": "/static/audio/calm_piano.wav"
+      "src": "static/audio/calm_piano.wav"
     },
     {
       "id": "warm_guitar",
       "title": "Warm Guitar Bed",
-      "src": "/static/audio/warm_guitar.wav"
+      "src": "static/audio/warm_guitar.wav"
     },
     {
       "id": "night_pad",
       "title": "Night Pad Bed",
-      "src": "/static/audio/night_pad.wav"
+      "src": "static/audio/night_pad.wav"
     }
   ]
 }

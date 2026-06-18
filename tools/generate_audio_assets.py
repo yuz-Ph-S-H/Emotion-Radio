@@ -209,9 +209,9 @@ def main() -> None:
         "enabled": True,
         "defaultVolume": 0.26,
         "tracks": [
-            {"id": "calm_piano", "title": "Calm Piano Bed", "src": "/static/audio/calm_piano.wav"},
-            {"id": "warm_guitar", "title": "Warm Guitar Bed", "src": "/static/audio/warm_guitar.wav"},
-            {"id": "night_pad", "title": "Night Pad Bed", "src": "/static/audio/night_pad.wav"},
+            {"id": "calm_piano", "title": "Calm Piano Bed", "src": "static/audio/calm_piano.wav"},
+            {"id": "warm_guitar", "title": "Warm Guitar Bed", "src": "static/audio/warm_guitar.wav"},
+            {"id": "night_pad", "title": "Night Pad Bed", "src": "static/audio/night_pad.wav"},
         ],
     }
     with open(os.path.join(AUDIO_DIR, "playlist.json"), "w", encoding="utf-8") as f:

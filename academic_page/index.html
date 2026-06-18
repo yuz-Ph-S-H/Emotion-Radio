@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+        content="共感电台：一套文字驱动的实时情绪音乐与视觉生成系统。通过中文情感分析将文本映射为连续的情绪变量，并实时合成轻音乐与粒子视觉。">
+  <meta name="keywords" content="情绪计算, 中文情感分析, 算法作曲, 实时可视化, 跨模态生成, Emotion Radio">
+  <meta property="og:title" content="共感电台 — 文字驱动的实时情绪音乐与视觉生成系统"/>
+  <meta property="og:description" content="文字 → 情感 (效价/唤醒) → 多声部轻音乐 + 粒子视觉 的连续跨模态映射系统。"/>
+  <title>共感电台 · 文字驱动的实时情绪音乐与视觉生成系统</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.4/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+
+<body>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero head-hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <p class="tag is-rounded brand-tag">实时跨模态生成 · Real-time Cross-modal Generation</p>
+          <h1 class="title is-1 publication-title">共感电台</h1>
+          <h2 class="subtitle is-4 publication-subtitle">
+            文字驱动的实时情绪音乐与视觉生成系统
+          </h2>
+          <p class="subtitle is-6 publication-subtitle-en">
+            Empathy Radio: A Text-Driven Real-Time Affective Music &amp; Visual Generation System
+          </p>
+
+          <!-- 链接按钮 -->
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="https://github.com/yuz-Ph-S-H/Emotion-Radio" target="_blank" rel="noopener" class="external-link button is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>代码 Code</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://github.com/yuz-Ph-S-H/Emotion-Radio/blob/main/docs/项目实现文档.md" target="_blank" rel="noopener" class="external-link button is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-lines"></i></span>
+                <span>实现文档</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://github.com/yuz-Ph-S-H/Emotion-Radio/blob/main/docs/数学推导说明.md" target="_blank" rel="noopener" class="external-link button is-rounded is-dark">
+                <span class="icon"><i class="fas fa-square-root-variable"></i></span>
+                <span>数学推导</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://github.com/yuz-Ph-S-H/Emotion-Radio/blob/main/docs/项目结果报告.md" target="_blank" rel="noopener" class="external-link button is-rounded is-dark">
+                <span class="icon"><i class="fas fa-clipboard-check"></i></span>
+                <span>结果报告</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#demo" class="external-link button is-rounded is-primary">
+                <span class="icon"><i class="fas fa-play"></i></span>
+                <span>运行 / Demo</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TEASER ===================== -->
+<section class="section teaser-section">
+  <div class="container is-max-desktop">
+    <div class="teaser-figure">
+      <div class="pipeline">
+        <div class="pipe-node node-text">
+          <div class="pipe-icon"><i class="fas fa-keyboard"></i></div>
+          <div class="pipe-label">文本输入 <span>Text $T$</span></div>
+          <div class="pipe-sample">"深夜的雨一直落下，<br>我孤独地走在回家的长路上。"</div>
+        </div>
+        <div class="pipe-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="pipe-node node-nlp">
+          <div class="pipe-icon"><i class="fas fa-brain"></i></div>
+          <div class="pipe-label">情感分析 <span>NLP</span></div>
+          <div class="pipe-sample">jieba · SnowNLP<br>意象词典 · 关键词</div>
+        </div>
+        <div class="pipe-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="pipe-node node-emotion">
+          <div class="pipe-icon"><i class="fas fa-wave-square"></i></div>
+          <div class="pipe-label">情绪变量 <span>$(v,a,W)$</span></div>
+          <div class="pipe-sample">效价 $v$ · 唤醒 $a$<br>意象权重分布 $W$</div>
+        </div>
+        <div class="pipe-arrow split-arrow"><i class="fas fa-code-fork"></i></div>
+        <div class="pipe-out">
+          <div class="pipe-node node-music">
+            <div class="pipe-icon"><i class="fas fa-music"></i></div>
+            <div class="pipe-label">实时音乐 <span>Audio</span></div>
+            <div class="pipe-sample">多声部轻音乐 · 调式 / 音色 / 乐句</div>
+          </div>
+          <div class="pipe-node node-visual">
+            <div class="pipe-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+            <div class="pipe-label">实时视觉 <span>Canvas</span></div>
+            <div class="pipe-sample">情绪配色 · 粒子效果</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="teaser-caption">
+      <strong>系统总览。</strong>一段中文文本经情感分析得到连续的情绪变量
+      <em>效价 $v$</em>、<em>唤醒度 $a$</em> 与<em>意象权重 $W$</em>，再被同步映射为浏览器端实时合成的
+      多声部轻音乐与粒子视觉。系统不把文本归为单一情绪标签，而是将其解释为
+      <strong>多意象、多权重、多声部、多粒子</strong>的连续跨模态映射。
+    </p>
+  </div>
+</section>
+
+<!-- ===================== ABSTRACT ===================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">摘要 <span class="title-en">Abstract</span></h2>
+        <div class="content has-text-justified abstract-body">
+          <p>
+            <strong>共感电台</strong>是一套<strong>文字驱动的实时情绪音乐与视觉生成系统</strong>。
+            用户输入任意中文文本，系统通过 jieba 分词、SnowNLP 基础情感判定、自建意象词典与情绪关键词的
+            <strong>三级情感融合</strong>，估计出连续的情绪效价 $v$ 与唤醒度 $a$，并对句中多个意象计算归一化权重。
+            这些情绪变量被进一步映射为一组<strong>连续的音乐与视觉参数</strong>——
+            调式、速度、力度、音色低通截止频率、和弦色彩、旋律走向，以及背景配色、粒子效果与运动强度。
+          </p>
+          <p>
+            后端基于 Flask + Flask-SocketIO，前端使用 Tone.js 实时合成音频、Canvas 粒子系统渲染视觉，
+            通过 WebSocket 实现"输入即响应"的低延迟联动。为了避免离散阈值导致的"音乐跳变"与早期实现的
+            "粗糙听感"，系统引入<strong>情绪明度</strong>统一驱动量、<strong>母带处理链</strong>（低通→EQ→压缩→限幅）、
+            以及以<strong>乐句</strong>为单位、按<strong>六种情绪性格</strong>选择句式与配器的算法作曲引擎。
+            最终输出在保持情感贴合的同时具备连续、温暖、耐听的轻音乐质感。本页系统性地呈现其方法、数学映射与演示结果。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===================== METHOD ===================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">方法 <span class="title-en">Method</span></h2>
+
+    <!-- 1. 三级情感融合 -->
+    <div class="method-block">
+      <h3 class="title is-4"><span class="step-no">1</span> 三级情感融合：从文本到 $(v,a)$</h3>
+      <div class="content has-text-justified">
+        <p>
+          SnowNLP 对中文短句的判定整体偏积极（大量中性/略消极句被判到 $0.8\sim0.95$），若直接采用会让"暴雨""深夜"
+          也被映射为明亮大调。为此系统采用<strong>三级结构</strong>：SnowNLP 给出整体语气，意象效价先验给出场景情感基调，
+          情绪关键词给出强烈的局部修正。
+        </p>
+        <div class="eq-card">
+          <p>意象效价先验（按意象权重 $w_k$ 加权放大，$G=3.5$）：</p>
+          $$\bar\delta=\frac{\sum_{k}w_k\,\delta_k}{\sum_{k}w_k},\qquad v_{\mathrm{img}}=\operatorname{clip}\bigl(0.5+G\,\bar\delta\bigr)$$
+          <p>与 SnowNLP 基础效价 $v_0$ 融合（以意象为主，$\lambda=0.4$），再叠加情绪关键词修正 $d_j$：</p>
+          $$v_b=\operatorname{clip}\bigl(\lambda v_0+(1-\lambda)v_{\mathrm{img}}\bigr),\qquad
+            v=\operatorname{clip}\Bigl(v_b+\textstyle\sum_j d_j\Bigr)$$
+        </div>
+        <p>
+          唤醒度 $a$ 由默认值出发，结合标点（感叹号 $+0.08$、问号 $+0.05$、省略号 $-0.05$）、意象加权唤醒度
+          $a_I=\sum_k w_k a_k$ 与短文本补偿 $b$ 共同决定：
+          $a=\operatorname{clip}(0.4a_p+0.6a_I+b)$。经此改造，
+          <span class="hl-neg">"暴雨狂风" $\to v\approx0.38$（小调）</span>、
+          <span class="hl-pos">"阳光花园" $\to v\approx1.0$（大调）</span>，音乐显著更贴合情感。
+        </p>
+      </div>
+    </div>
+
+    <!-- 2. 意象权重 -->
+    <div class="method-block">
+      <h3 class="title is-4"><span class="step-no">2</span> 意象权重：多意象的占比分配</h3>
+      <div class="content has-text-justified">
+        <p>
+          一句话里可能出现多个意象。系统为第 $k$ 个意象按先验唤醒度与出现顺序打分并归一化，使权重之和为 $1$，
+          权重进而影响唤醒度、音色排序与视觉效果优先级：
+        </p>
+        <div class="eq-card">
+          $$s_k=a_k+0.02\cdot\max(0,\,12-p_k),\qquad w_k=\frac{s_k}{\sum_j s_j}$$
+        </div>
+        <p class="example-line">
+          示例 <code>"雨停以后出现彩虹，阳光照进花园"</code> →
+          $w_{雨}=0.242,\; w_{彩虹}=0.311,\; w_{阳光}=0.265,\; w_{花园}=0.182$。
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. 情绪性格档 -->
+    <div class="method-block">
+      <h3 class="title is-4"><span class="step-no">3</span> 情绪性格档：六种性格拉开场景区分度</h3>
+      <div class="content has-text-justified">
+        <p>
+          为避免"所有场景都叠满全部乐器、听感趋同"，系统先由 $(v,a)$ 与意象集合把场景判为<strong>六种情绪性格</strong>，
+          每种性格对应不同的旋律句式、声部上限、是否用鼓与点缀，以及速度/力度系数 $k_t,k_v$。
+        </p>
+      </div>
+      <div class="table-wrap">
+        <table class="table is-fullwidth is-hoverable mood-table">
+          <thead>
+            <tr>
+              <th>情绪性格</th><th>乐句句式</th><th>声部上限 $V_{\max}$</th>
+              <th>鼓点</th><th>点缀</th><th>速度 $k_t$</th><th>力度 $k_v$</th><th>句式特征</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="mood-dot tense"></span>紧张 tense</td><td>driving</td><td>3</td><td>✓</td><td>✗</td><td>1.12</td><td>1.15</td><td>窄音域、重复音、节奏驱动</td></tr>
+            <tr><td><span class="mood-dot melancholy"></span>忧伤 melancholy</td><td>lament</td><td>2</td><td>✗</td><td>✗</td><td>0.86</td><td>0.82</td><td>缓慢下行、长音、留白多</td></tr>
+            <tr><td><span class="mood-dot calm"></span>平静 calm</td><td>flow</td><td>2</td><td>✗</td><td>✗</td><td>0.90</td><td>0.85</td><td>温和起伏、连绵</td></tr>
+            <tr><td><span class="mood-dot tender"></span>温柔 tender</td><td>song</td><td>2</td><td>✗</td><td>✓</td><td>1.00</td><td>1.00</td><td>歌唱性弧线</td></tr>
+            <tr><td><span class="mood-dot joyful"></span>欢快 joyful</td><td>dance</td><td>3</td><td>✓</td><td>✓</td><td>1.10</td><td>1.08</td><td>音阶跑动 / 琶音、活泼</td></tr>
+            <tr><td><span class="mood-dot dreamy"></span>梦幻 dreamy</td><td>float</td><td>3</td><td>✗</td><td>✓</td><td>0.84</td><td>0.80</td><td>宽广琶音、大量留白</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4. 连续情绪参数 -->
+    <div class="method-block">
+      <h3 class="title is-4"><span class="step-no">4</span> 连续情绪参数：让音色与和弦随情绪平滑变化</h3>
+      <div class="content has-text-justified">
+        <p>
+          为消除"离散阈值跳变"，系统定义<strong>情绪明度</strong> $\beta$ 作为统一驱动量，
+          再以人耳近似对数感知的指数映射驱动<strong>音色低通截止频率</strong> $f_c$：
+        </p>
+        <div class="eq-card">
+          $$\beta=\operatorname{clip}(0.18+0.62v+0.20a),\qquad f_c(\beta)=500\cdot 2^{\,1+3\beta}\ \text{Hz}$$
+          <p class="eq-note">
+            $\beta=0 \Rightarrow f_c=1000\,$Hz（暖、暗、克制）；$\beta=1 \Rightarrow f_c=8000\,$Hz（通透、明亮）。
+          </p>
+        </div>
+        <p>
+          调式由效价分段（$v>0.65$ 大调五声、$v\le0.30$ 小调），并按情绪加入<strong>七度/九度增色</strong>使色彩更开阔；
+          旋律走向偏置 $\kappa=\operatorname{clip}(2(v-0.5),-1,1)$ 决定每个乐句的起始锚点——积极情绪整段偏高、消极偏低。
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card"><i class="fas fa-sliders"></i><h4>调式 / 根音</h4><p>由效价 $v$ 分四段，大/小调与五声音阶平滑切换。</p></div>
+          <div class="feature-card"><i class="fas fa-filter"></i><h4>音色亮度</h4><p>低通截止 $f_c$ 由情绪明度实时 ramp，暗↔亮连续过渡。</p></div>
+          <div class="feature-card"><i class="fas fa-layer-group"></i><h4>和弦色彩</h4><p>按情绪加入大七/小七、九度增色，强消极保持朴素三和弦。</p></div>
+          <div class="feature-card"><i class="fas fa-chart-line"></i><h4>旋律走向</h4><p>走向偏置 $\kappa$ 决定乐句锚点，整体上行/下行随情感同向。</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 乐句引擎 + 母带链 -->
+    <div class="method-block">
+      <h3 class="title is-4"><span class="step-no">5</span> 乐句引擎与母带处理链：从"反复音型"到耐听轻音乐</h3>
+      <div class="content has-text-justified">
+        <p>
+          旋律不再逐拍随机游走，而是以<strong>乐句</strong>为单位生成：从当前性格的乐句库取句 → 以 $0.35$ 概率做倒影变形 →
+          按 $\kappa$ 定起始锚点 → 句内力度递减形成"呼吸" → 句末留白换气，并沿 Transport 时间轴按变时值精确排程。
+          所有声部与背景床最终汇入统一<strong>母带链</strong>：
+        </p>
+        <div class="chain-flow">
+          <span>声部</span><i class="fas fa-angle-right"></i>
+          <span>Delay / Reverb</span><i class="fas fa-angle-right"></i>
+          <span>低通 $f_c$</span><i class="fas fa-angle-right"></i>
+          <span>三段 EQ</span><i class="fas fa-angle-right"></i>
+          <span>压缩</span><i class="fas fa-angle-right"></i>
+          <span class="chain-final">限幅 −2 dB</span>
+        </div>
+        <p>
+          限幅器把峰值钳制在 $-2\,$dB 以下，彻底杜绝爆音；背景音乐床为本地原创加性合成
+          （谐波滚降 + 升余弦音头 + 微失谐合唱 + 低通 + Schroeder 混响 + 无缝循环交叉淡化），<strong>无版权问题</strong>。
+        </p>
+      </div>
+    </div>
+
+    <!-- 6. 视觉映射 -->
+    <div class="method-block">
+      <h3 class="title is-4"><span class="step-no">6</span> 视觉映射：情绪到色彩与粒子</h3>
+      <div class="content has-text-justified">
+        <p>
+          背景使用 HSL 色彩空间，色相由效价控制（高效价偏暖、中性偏紫蓝、低效价偏深蓝），饱和度与亮度随唤醒度提高。
+          粒子效果按意象权重降序<strong>只取前 2 个</strong>（主效果原速、次效果 $0.45$ 倍速）以保持画面主次分明；
+          同屏存活粒子上限 $480$，速度、数量、辉光均随唤醒度线性映射：
+        </p>
+        <div class="eq-card eq-compact">
+          $$\text{speed}=0.28+0.92a,\quad \text{count}=\lfloor 20+80a\rfloor,\quad \text{glow}=0.2+0.5a$$
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===================== RESULTS ===================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">结果 <span class="title-en">Results</span></h2>
+
+    <h3 class="title is-4 has-text-centered subtle">黄金演示路线：一句一种性格的情绪叙事</h3>
+    <p class="content has-text-centered result-intro">
+      下列六句构成一条从低落 → 明亮 → 梦幻的情绪叙事，每句被判为不同的情绪性格，
+      采用不同的旋律句式、配器与节奏。标注格式：<code>效价/能量 → 性格 · 调式 · 句式/配器 · 粒子</code>（均为本地分析器真实运行结果）。
+    </p>
+    <div class="table-wrap">
+      <table class="table is-fullwidth is-striped result-table">
+        <thead>
+          <tr><th>#</th><th>输入文本</th><th>$v/a$</th><th>性格</th><th>实测效果</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>窗外是冰冷的小雨，房间里只剩回忆和叹息。</td><td>0.38 / 0.32</td><td><span class="mood-dot melancholy"></span>忧伤</td><td>小调(暗) · 缓慢下行 · 钢琴/钟琴(无鼓) · 微光/星钻</td></tr>
+          <tr><td>2</td><td>深夜的雨一直落下，我孤独地走在回家的长路上。</td><td>0.49 / 0.37</td><td><span class="mood-dot calm"></span>平静</td><td>大调 · 连绵句式 · 夜色 · 细雨/漂浮</td></tr>
+          <tr><td>3</td><td>清晨的薄雾散开，小溪在山谷里安静流动。</td><td>0.64 / 0.34</td><td><span class="mood-dot calm"></span>平静</td><td>大调 · 长笛/钟琴 · 阳光/流水</td></tr>
+          <tr><td>4</td><td>阳光照进花园，蝴蝶在花间快乐飞舞。</td><td>1.00 / 0.43</td><td><span class="mood-dot tender"></span>温柔</td><td>五声大调(亮) · 歌唱句式 · 暖吉他+点缀 · 阳光/花瓣</td></tr>
+          <tr><td>5</td><td>城市上空升起绚烂的烟花，照亮所有笑容。</td><td>1.00 / 0.58</td><td><span class="mood-dot joyful"></span>欢快</td><td>五声大调 · 跑动琶音+鼓点 · 烟花/星钻</td></tr>
+          <tr><td>6</td><td>梦境里出现极光，光芒在天空缓慢流动。</td><td>0.99 / 0.45</td><td><span class="mood-dot dreamy"></span>梦幻</td><td>五声大调 · 宽广琶音 · 钟琴/铺底 · 极光</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="title is-4 has-text-centered subtle mt-6">关键对比：同样的"雨"，不同的情绪</h3>
+    <p class="content has-text-centered result-intro">
+      系统并非按关键词查表，而是综合情感效价生成音乐——两句都含意象"雨"，音乐走向却截然相反。
+    </p>
+    <div class="columns is-centered compare-cols">
+      <div class="column is-half">
+        <div class="compare-card neg">
+          <div class="compare-val">$v = 0.38$ · 小调 · 暗</div>
+          <p class="compare-text">"窗外是冰冷的小雨，房间里只剩回忆和叹息。"</p>
+          <p class="compare-note">同样有"雨"，情绪低落 → <strong>忧伤</strong>，旋律下行、暗色粒子。</p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="compare-card pos">
+          <div class="compare-val">$v = 0.86$ · 大调 · 亮</div>
+          <p class="compare-text">"雨停以后出现彩虹，阳光照进花园，远处还有雷声。"</p>
+          <p class="compare-note">同样有"雨"，但整体明亮 → <strong>温暖</strong>，多声部 + 多粒子叠加。</p>
+        </div>
+      </div>
+    </div>
+    <p class="content has-text-centered compare-explain">
+      体现<strong>意象效价先验 + 三级情感融合</strong>：复合情绪 <code>"雨/彩虹/阳光/花园/雷声"</code> 被分配为
+      <code>鼓点 + 钟琴 + 吉他 + 钢琴</code> 四声部，粒子 <code>闪电/彩虹/阳光/雨/花瓣</code> 同时出现。
+    </p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===================== IMPLEMENTATION / DEMO ===================== -->
+<section class="section" id="demo">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">技术栈与运行 <span class="title-en">Stack &amp; Run</span></h2>
+
+    <div class="columns">
+      <div class="column">
+        <div class="stack-card">
+          <h4><i class="fas fa-server"></i> 后端</h4>
+          <ul>
+            <li>Flask + Flask-SocketIO（WebSocket 实时通信）</li>
+            <li>jieba 分词 · SnowNLP 情感判定</li>
+            <li>自建意象词典 + 情绪关键词（197 个）</li>
+            <li>可选 API 增强方案（兼容 OpenAI 接口）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="column">
+        <div class="stack-card">
+          <h4><i class="fas fa-display"></i> 前端</h4>
+          <ul>
+            <li>Tone.js 实时音频合成 + 母带链</li>
+            <li>Canvas 粒子系统（视觉引擎）</li>
+            <li>乐句引擎 / 时间线调度</li>
+            <li>玻璃拟态电影感 UI</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="run-card">
+      <h4><i class="fas fa-terminal"></i> 本地运行</h4>
+      <pre><code>python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+# 浏览器打开 http://127.0.0.1:5000，先点一下页面再输入文字</code></pre>
+      <p class="run-note">默认使用本地 NLP 方案，<strong>无需任何 API 密钥</strong>即可演示；切换 API 方案只需在 <code>config.py</code> 中设置 <code>NLP_MODE="api"</code>。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===================== BIBTEX ===================== -->
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">引用 <span class="title-en">BibTeX</span></h2>
+    <pre class="bibtex"><code>@misc{empathyradio2026,
+  title        = {共感电台：文字驱动的实时情绪音乐与视觉生成系统},
+  year         = {2026},
+  howpublished = {\url{https://github.com/yuz-Ph-S-H/Emotion-Radio}},
+  note         = {Text-driven real-time affective music and visual generation}
+}</code></pre>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer page-footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        本页面基于
+        <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>
+        制作，采用
+        <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a> 许可。
+      </p>
+      <p class="footer-meta">共感电台 · Empathy Radio &nbsp;|&nbsp; 文字 → 情感 → 视听的连续映射</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

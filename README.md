@@ -56,26 +56,22 @@ art_final/
 
 ---
 
-## 🌐 在线访问（GitHub Pages）
+## 🌐 在线访问
 
-本项目已做**纯前端化**：情绪分析（意象词典 + 规则映射）已由 Python 后端完整移植到浏览器端
-`static/js/analyzer.js`，无需 Flask / Socket.IO 即可独立运行。因此整站可直接托管到 GitHub Pages。
-
-👉 在线体验：**https://yuz-ph-s-h.github.io/Emotion-Radio/**
-
-### 首次启用 Pages（仓库所有者操作一次）
-1. 打开仓库 **Settings → Pages**。
-2. **Build and deployment → Source** 选择 **Deploy from a branch**。
-3. **Branch** 选择 `main`，文件夹选择 **`/ (root)`**，点击 **Save**。
-4. 等待 1～2 分钟，刷新该页面顶部即出现绿色的站点链接，访问上面的地址即可。
-
-之后每次 `git push` 到 `main`，GitHub 会自动重新发布，无需再手动操作。
+👉 **https://yuz-ph-s-h.github.io/Emotion-Radio/**
 
 ---
 
 ## 🚀 本地运行（可选）
 
-无需后端也能跑——任选一种方式在浏览器打开 `index.html`：
+无需后端也能跑。先克隆仓库：
+
+```bash
+git clone https://github.com/yuz-Ph-S-H/Emotion-Radio.git
+cd Emotion-Radio
+```
+
+然后任选一种方式在浏览器打开 `index.html`：
 
 ```bash
 # 方式一：任意静态服务器（推荐，避免 file:// 下音频/资源跨域限制）
@@ -88,6 +84,8 @@ venv\Scripts\activate            # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
 python app.py                    # 打开 http://127.0.0.1:5000
 ```
+
+> 方式一连 Python 都不需要装依赖；方式二适合想继续用 Flask 调试的场景。
 
 > **Windows 用户**：可直接双击 `run.bat`（或运行 `./run.ps1`）。
 
